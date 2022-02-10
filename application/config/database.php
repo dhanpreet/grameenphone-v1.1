@@ -75,14 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	 /*
-	'hostname' => '127.0.0.1',
-	'username' => 'nisha',
-	'password' => 'Nisha12#$',
-	'database' => 'grameenphone_live_db',
-	 
-	 */
-	 
+	
 	'hostname' => 'aa1fd67z57cyvad.cmq6opoqub9h.ap-southeast-1.rds.amazonaws.com',
 	'username' => 'admin',
 	'password' => '8S2XAWYsKkZ3Qma7tJTP',
