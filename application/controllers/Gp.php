@@ -285,7 +285,7 @@ class Gp extends REST_Controller {
 						if(!empty($data['msisdn'])){
 							$loginToken = time().'-'.$data['msisdn'];
 							$loginToken = base64_encode($loginToken);					
-							$loginAccessURL = base_url().'UserAccessPortal/?token='.$loginToken;
+							$loginAccessURL = site_url('UserAccessPortal/?token='.$loginToken);
 							redirect($loginAccessURL);
 						
 						} else {
