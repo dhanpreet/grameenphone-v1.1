@@ -290,8 +290,6 @@ function obfuscate_email($email){
 </section>
 
 
-
-
 <script>
 
 $('#play_tournament').click(function(){
@@ -305,7 +303,8 @@ $('#play_tournament').click(function(){
 	//alert(tour_id);
 	
 	if(tournament_type == '1'){ // for free content
-		var event_ajaxdata = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=eventExecute&event_name=play_free_tournament_games&page=tournament-details&tid="+tour_id+"&tgid="+tour_game_id;
+		
+		/* var event_ajaxdata = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=eventExecute&event_name=play_free_tournament_games&page=tournament-details&tid="+tour_id+"&tgid="+tour_game_id;
 		$.ajax({
 			url:"<?php echo site_url('site/EventCapture') ?>", 
 			data: event_ajaxdata,
@@ -314,7 +313,8 @@ $('#play_tournament').click(function(){
 			success: function(response){
 				//console.log("Time "+response);
 			}
-		});
+		}); */
+		
 		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 			window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_free_tournament_games", params: {"page": "tournament-details"} });
 		} else {
@@ -326,9 +326,8 @@ $('#play_tournament').click(function(){
 	} else {
 		// Content is premium
 		if(user_type == '1'){  // for Premium user
-		
+			/* 
 			var event_ajaxdata = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=eventExecute&event_name=play_paid_tournament_games&page=tournament-details&tid="+tour_id+"&tgid="+tour_game_id;
-				
 			$.ajax({
 				url:"<?php echo site_url('site/EventCapture') ?>", 
 				data: event_ajaxdata,
@@ -338,7 +337,7 @@ $('#play_tournament').click(function(){
 					//console.log("Time "+response);
 				}
 			});
-			
+			 */
 			if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 				window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_paid_tournament_games", params: {"page": "tournament-details"} });
 			} else {
@@ -348,7 +347,7 @@ $('#play_tournament').click(function(){
 			window.location.href = tournamentPlayURL;
 		
 		} else { // for Regular user
-			
+			/* 
 			var event_ajaxdata = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=eventExecute&event_name=play_paid_tournament_games&page=tournament-details&tid="+tour_id+"&tgid="+tour_game_id;
 			var content_ajaxdata = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=contentChange&event_name=play_paid_tournament_games&page=<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id'])) ?>"+"&tid="+tour_id+"&tgid="+tour_game_id;
 
@@ -371,7 +370,8 @@ $('#play_tournament').click(function(){
 					//console.log("Time "+response);
 				}
 			});	
-	
+			*/
+			
 			if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 				window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_paid_tournament_games", params: {"page": "tournament-details"} });
 				window.webkit.messageHandlers.onContentChange.postMessage({contentUrl:"<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id'])) ?>", isPremium: true});
@@ -397,7 +397,7 @@ $(document).ready(function(){
 		var tour_game_id = "<?php echo $tournamentInfo['tournament_game_id']; ?>"; 
 		var play_type = "practice-tournament"; 
 		var dataStr = "user_id=<?php echo $userInfo['user_id']; ?>&eventfun=eventExecute&event_name=play_instant_games&page=tournament-details&tid="+tour_id+"&tgid="+tour_game_id+"&type="+play_type;
-	
+	/* 
 		$.ajax({
 			url:"<?php echo site_url('site/EventCapture') ?>", 
 			data: dataStr,
@@ -407,7 +407,7 @@ $(document).ready(function(){
 				//console.log(dataStr);
 			}
 		});
-		
+		 */
 		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 		   window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_instant_games", params: {"page": "tournament-details"} });
 		} else {
@@ -495,7 +495,7 @@ $(document).ready(function() {
  
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 

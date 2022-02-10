@@ -15,34 +15,15 @@
 	<meta property="og:image" content="<?php echo base_url() ?>assets/frontend/img/gpl.png" />
 	<meta content="<?php echo base_url() ?>assets/frontend/img/gpl.png" property="thumbnail" />
 	
-
 	<link rel="stylesheet" href="<?php echo base_url() ?>assets/frontend/css/bootstrap.min.css">
 	
 	<script src="<?php echo base_url() ?>assets/frontend/js/jquery.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/frontend/js/bootstrap.min.js"></script>
 	
 	
-	
-	<!-- For fontawesome icons -->
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/css/all.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/css/brands.css" rel="stylesheet">
-	<script defer src="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/js/all.js"></script>
-	<script defer src="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/js/brands.js"></script>
-	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/style.css">
 	
 	
-	<!-- For animations -->
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/animations.css">
-	
-	
-<!-- for google sign in -->
-<meta name="google-signin-client_id" content="931603219860-h3bpksbdd0basc0gjmmjeqq48tr8e6oe.apps.googleusercontent.com">
-<meta name="google-signin-scope" content="profile email">
- <script src="https://apis.google.com/js/platform.js" async defer></script> 
- 
-<!-- for google sign in ends-->
- 
 	
 	<style type="text/css">
 
@@ -331,9 +312,6 @@ img {
 <body >
 <div class="bg-image"></div>
 
-
-
- 
 <div class="bg-float-layer" style="">
 </div>
 
@@ -382,197 +360,34 @@ if( $iPod || $iPhone || $iPad){ ?>
     
 <?php }else if($Android){ ?>
   <script>
-
     window.jsInterface.tokenStatus(false, "<?php echo $loginerror; ?>");
-
 </script>
 <?php }else if($webOS){ ?>
     <script>
-
-    window.jsInterface.tokenStatus(false, "<?php echo $loginerror; ?>");
-
+		window.jsInterface.tokenStatus(false, "<?php echo $loginerror; ?>");
 </script>
-<?php }
-?>
+<?php }  ?>
+
+
 <script type="text/javascript">
-	$.ajax({
-			url:"<?php echo site_url('site/EventCapture') ?>", 
-			data: "user_id=0&eventfun=tokenStatus&event_name=jwt-token&page=jwt_error",
-			type: "POST",
-			async: false,
-			success: function(response){
-				//console.log("Time "+response);
-			}
-		
-		    });
+	/* $.ajax({
+		url:"<?php echo site_url('site/EventCapture') ?>", 
+		data: "user_id=0&eventfun=tokenStatus&event_name=jwt-token&page=jwt_error",
+		type: "POST",
+		async: false,
+		success: function(response){
+			//console.log("Time "+response);
+		}
+	}); */
 </script>
+
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
  
-
-<script>
-$(document).ready(function() {
-    $('#login_manual_email').click(function(){
-		$("#login_with_phone").hide('fast');
-		$("#login_div").show('fast');
-	});
-});
-</script>
-
-
-<script>
-$(document).ready(function() {
-    $('#login_manual_phone').click(function(){
-		$("#login_div").hide('fast');
-		$("#login_with_phone").show('fast');
-	});
-});
-</script>
-
-
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src='<?php echo base_url() ?>assets/frontend/css3-animate-it.js'></script>
-
-
-
-<script>
-$(document).ready(function(){
-	
-	$.doTimeout(200, function(){
-		$('.repeat1').addClass('go');
-		return true;
-	});
-	$.doTimeout(300, function(){
-		$('.repeat2').addClass('go');
-		return true;
-	});
-	$.doTimeout(400, function(){
-		$('.repeat3').addClass('go');
-		return true;
-	});
-	$.doTimeout(500, function(){
-		$('.repeat4').addClass('go');
-		return true;
-	});
-	$.doTimeout(600, function(){
-		$('.repeat5').addClass('go');
-		return true;
-	});
-	$.doTimeout(700, function(){
-		$('.repeat6').addClass('go');
-		return true;
-	});
-	$.doTimeout(800, function(){
-		$('.repeat7').addClass('go');
-		return true;
-	});
-	$.doTimeout(900, function(){
-		$('.repeat8').addClass('go');
-		return true;
-	});
-	$.doTimeout(1000, function(){
-		$('.repeat9').addClass('go');
-		return true;
-	});
-	$.doTimeout(1100, function(){
-		$('.repeat10').addClass('go');
-		return true;
-	});
-	$.doTimeout(1200, function(){
-		$('.repeat11').addClass('go');
-		return true;
-	});
-	$.doTimeout(1300, function(){
-		$('.repeat12').addClass('go');
-		return true;
-	});
-	$.doTimeout(1400, function(){
-		$('.repeat13').addClass('go');
-		return true;
-	});
-	$.doTimeout(1500, function(){
-		$('.repeat14').addClass('go');
-		return true;
-	});
-	$.doTimeout(1600, function(){
-		$('.repeat15').addClass('go');
-		return true;
-	});
-	$.doTimeout(1700, function(){
-		$('.repeat16').addClass('go');
-		return true;
-	});
-	$.doTimeout(1800, function(){
-		$('.repeat17').addClass('go');
-		return true;
-	});
-	$.doTimeout(1900, function(){
-		$('.repeat18').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2000, function(){
-		$('.repeat19').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2100, function(){
-		$('.repeat20').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2200, function(){
-		$('.repeat21').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2300, function(){
-		$('.repeat22').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2400, function(){
-		$('.repeat23').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2500, function(){
-		$('.repeat24').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2600, function(){
-		$('.repeat25').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2700, function(){
-		$('.repeat26').addClass('go');
-		return true;
-	});
-	
-	$.doTimeout(2800, function(){
-		$('.repeat27').addClass('go');
-		return true;
-	});
-	
-	
-	
-/*	
-	$.doTimeout(5000, function(){
-		$('.animated.go').removeClass('go');
-		
-		return true;
-	});
-	*/
-});
-
-</script>
-
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 </body>
 </html>

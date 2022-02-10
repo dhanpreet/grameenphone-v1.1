@@ -377,7 +377,7 @@
 		
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 

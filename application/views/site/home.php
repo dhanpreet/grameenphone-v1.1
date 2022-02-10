@@ -15,7 +15,6 @@
 	<meta property="og:image" content="<?php echo base_url() ?>assets/frontend/img/gpl.png" />
 	<meta content="<?php echo base_url() ?>assets/frontend/img/gpl.png" property="thumbnail" />
 	
-	
 	<link rel="stylesheet" href="<?php echo base_url() ?>assets/frontend/css/bootstrap.min.css">
 	<script src="<?php echo base_url() ?>assets/frontend/js/jquery.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/frontend/js/bootstrap.min.js"></script>
@@ -23,15 +22,12 @@
 	<!-- For fontawesome icons -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/css/all.css" rel="stylesheet">
 	
-	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/style_theme_2.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/home.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/fireworks.css">
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/slick.css">
 	<script type="text/javascript" src="<?php echo base_url() ?>assets/frontend/js/slick.js"></script>
-	
-	
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/glider/glider.css" />
   
@@ -521,9 +517,7 @@
 					</div>
 					
 					<div class="col-xs-12 col-md-12"><br></div>	
-					<!--<a class="btn btn-outline-green" target="_blank" href="mailto:techsupport@adxdigitalsg.com">Send Mail</a>
-					<div class="col-xs-12 col-md-12"><br></div>	-->
-				
+					
 				</div>	
 		   </div>
 		</div>
@@ -547,7 +541,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var link = $(this).attr('data-href');
 		var gameid = $(this).attr('data-id');
-	 
+	 /* 
 		$.ajax({
 			url:"<?php echo site_url('site/EventCapture') ?>", 
 			data: "eventfun=eventexecute&event_name=play_instant_games&page=home&gameid="+gameid,
@@ -556,7 +550,7 @@ $(document).ready(function(){
 			success: function(response){
 				//console.log("Time "+response);
 			}
-		});
+		}); */
 		
 		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 			window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_instant_games", params: {"page": "home"} });
@@ -627,9 +621,6 @@ jQuery(document).ready(function ($) {
 	});
 }); 
 </script>
-
-
-
 
 
 <?php if ($this->session->flashdata('error')){ ?>
@@ -929,7 +920,7 @@ jQuery(document).ready(function ($) {
 </script>
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 
@@ -1010,32 +1001,7 @@ jQuery(document).ready(function() {
 }(this);
 </script>
 
-
-
-<!--
-<script src="<?php echo base_url() ?>assets/frontend/js/jquery.countdown.min.js" integrity="" crossorigin="allow"></script>
--->
-<!--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.4.0/moment-timezone-with-data-2010-2020.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous"></script>
-
-<script>
-$(document).ready(function() {
-	$('[data-countdown]').each(function() {
-	  var $this = $(this), finalDate = $(this).data('countdown');
-	  $this.countdown(finalDate, function(event) {
-		$this.html(event.strftime('%Dd : %Hh : %Mm : %Ss'));
-	  });
-	  
-
-	});
-});
-</script>
--->
-
- 	
+	
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.4.0/moment-timezone-with-data-2010-2020.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous"></script>
@@ -1051,13 +1017,10 @@ $(document).ready(function() {
 	});
 });
 </script>
-	
- 
 
 
+<?php include('page_session_timeout.php'); ?>
 
 
- <?php include "page_session_timeout.php";
-?>
 </body>
 </html>

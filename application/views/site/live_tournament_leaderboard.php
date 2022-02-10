@@ -118,11 +118,13 @@
         </div>
     </div>
 	
-	<script>
+ 
+<script>
 jQuery(document).ready(function() {
-   setTimeout(function(){ jQuery('#load').fadeOut("fast"); }, 500);
+    jQuery('#load').fadeOut("fast");
 });
 </script>
+
 
 <?php include('page_session_timeout.php'); ?>
 

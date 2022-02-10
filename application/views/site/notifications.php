@@ -233,7 +233,7 @@ win.scroll(function(event) {
 	
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 <?php include('page_session_timeout.php'); ?>

@@ -1453,14 +1453,6 @@ echo "</pre>";
 	}
 	
 	
-	function testGame(){
-		$id = '24';
-		$data['gameId'] = $id;
-		$data['gameInfo'] = $this->SITEDBAPI->getGameboostGameInfo($id);
-			
-		$this->load->view('site/test-game.php', $data);
-    }
-	
 	
 	public function playGame__old($id){
 		$id = base64_decode($id); // gameboost game id

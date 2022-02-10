@@ -8,7 +8,6 @@
 	<meta name="keywords" content="">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0">
 
-
 	<link rel="stylesheet" href="<?php echo base_url() ?>assets/frontend/css/bootstrap.min.css">
 	<script src="<?php echo base_url() ?>assets/frontend/js/jquery.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/frontend/js/bootstrap.min.js"></script>
@@ -16,7 +15,6 @@
 	<!-- For fontawesome icons -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/css/all.css" rel="stylesheet">
 	<script defer src="<?php echo base_url() ?>assets/frontend/fontawesome-5.15.1/js/all.js"></script>
-	
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/frontend/css/style_theme_2.css">
 	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.4/jquery.lazy.min.js"></script>
@@ -120,8 +118,6 @@
         <?php } ?>
       </div>
 	  
-	  
-	  
 		<div class="col-xs-12 padd gaming-section-header-strip">
 			<br><h4><span class="pull-left text-white">&nbsp; Sports & Racing Games</span></h4>
 			<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Sports') ?>">View all </a></span>
@@ -141,11 +137,7 @@
           <?php } ?>
         <?php } ?>
       </div>
-	  
-	  
-		
-    
-        </div>
+	  </div>
 <br><br>
       <!--   <a class="bottom-fixed-btn"><button type="button" class="btn btn-bottom btn-active">NEXT</button></a>  -->
       </div>
@@ -157,7 +149,7 @@
 	
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 
@@ -166,7 +158,7 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		var link = $(this).attr('data-href');
 		var gameid = $(this).attr('data-id');
-	 
+	 /* 
 		$.ajax({
 			url:"<?php echo site_url('site/EventCapture') ?>", 
 			data: "eventfun=eventExecute&event_name=play_instant_games&page=games&gameid="+gameid,
@@ -176,7 +168,7 @@ jQuery(document).ready(function() {
 				//console.log("Time "+response);
 			}
 		});
-		
+		 */
 		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 			window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_instant_games", params: {"page": "games"} });
 		} else {

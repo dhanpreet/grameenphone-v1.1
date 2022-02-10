@@ -8,7 +8,6 @@
 	<meta name="keywords" content="">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0">
 
-
 	<link rel="stylesheet" href="<?php echo base_url() ?>assets/frontend/css/bootstrap.min.css">
 	<script src="<?php echo base_url() ?>assets/frontend/js/jquery.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/frontend/js/bootstrap.min.js"></script>
@@ -60,7 +59,7 @@
 		
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 
@@ -70,7 +69,7 @@ jQuery(document).ready(function() {
 	   e.preventDefault();
 	   var link = $(this).attr('data-href');
 	   var gameid = $(this).attr('data-id');
-	 
+	 /* 
 		$.ajax({
 			url:"<?php echo site_url('site/EventCapture') ?>", 
 			data: "eventfun=eventExecute&event_name=play_instant_games&page=games&gameid="+gameid,
@@ -80,7 +79,7 @@ jQuery(document).ready(function() {
 				//console.log("Time "+response);
 			}
 		});
-		
+		 */
 		if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 			window.webkit.messageHandlers.onEventExecute.postMessage({name: "play_instant_games", params: {"page": "games"} });
 		} else {
