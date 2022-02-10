@@ -222,36 +222,36 @@ class Gp extends REST_Controller {
 						if($userId){
 							$loginToken = time().'-'.$userId;
 							$loginToken = base64_encode($loginToken);					
-							$loginAccessURL = base_url().'UserAccess/?token='.$loginToken;
+							$loginAccessURL = site_url('UserAccess/?token='.$loginToken);
 							redirect($loginAccessURL);
 						} else {
 							
 							$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-							$errorUrl = base_url().'LoginError';
+							$errorUrl = site_url('LoginError');
 							redirect($errorUrl);
 						}
 					} else {
 					
 						$this->session->set_userdata('loginerror', 'Empty Token Identified!');
-						$errorUrl = base_url().'LoginError';
+						$errorUrl = site_url('LoginError');
 						redirect($errorUrl);
 					}
 				} else {
 					
 					$this->session->set_userdata('loginerror', 'Token has been expired!');
-					$errorUrl = base_url().'LoginError';
+					$errorUrl = site_url('LoginError');
 					redirect($errorUrl);
 				}
 			} catch (\Exception $e) { // Also tried JwtException
 				
 				$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-				$errorUrl = base_url().'LoginError';
+				$errorUrl = site_url('LoginError');
 				redirect($errorUrl);
 			}
 	    } else {
 			
 	    	$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-			$errorUrl = base_url().'LoginError';
+			$errorUrl = site_url('LoginError');
 			redirect($errorUrl);
 	    }
     }
@@ -290,27 +290,27 @@ class Gp extends REST_Controller {
 						
 						} else {
 							$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-							$errorUrl = base_url().'LoginError';
+							$errorUrl = site_url('LoginError');
 							redirect($errorUrl);
 						}
 					} else {					
 						$this->session->set_userdata('loginerror', 'Empty Token Identified!');
-						$errorUrl = base_url().'LoginError';
+						$errorUrl = site_url('LoginError');
 						redirect($errorUrl);
 					}
 				} else {
 					$this->session->set_userdata('loginerror', 'Token has been expired!');
-					$errorUrl = base_url().'LoginError';
+					$errorUrl = site_url('LoginError');
 					redirect($errorUrl);
 				}
 			} catch (\Exception $e) { // Also tried JwtException
 				$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-				$errorUrl = base_url().'LoginError';
+				$errorUrl = site_url('LoginError');
 				redirect($errorUrl);
 			}
 	    } else {
 	    	$this->session->set_userdata('loginerror', 'Invalid Token Identified!');
-			$errorUrl = base_url().'LoginError';
+			$errorUrl = site_url('LoginError');
 			redirect($errorUrl);
 	    }
     }

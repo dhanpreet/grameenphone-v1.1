@@ -677,7 +677,7 @@ class Site extends CI_Controller {
 		
 			if($userInfo['user_type']=='1' && $userInfo['user_subscription_popup']=='1'){
 				//premium
-				$url = base_url()."Welcome/".base64_encode($id);
+				$url = site_url("Welcome/".base64_encode($id));
 				
 				// update the popup value to hide welcome screen
 				$updateData['user_subscription_popup'] = '0';
@@ -686,7 +686,7 @@ class Site extends CI_Controller {
 				
 			} else{
 				//$url = base_url()."home/".base64_encode($id)."/".$uid;
-				$url = base_url()."home/".base64_encode($id);
+				$url = site_url("home/".base64_encode($id));
 			}
 			redirect($url);
 		}	

@@ -36,7 +36,7 @@ $config['base_url'] = 'http://game-env.eba-npkjfumf.ap-southeast-1.elasticbeanst
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = 'index.php';
 
 /*
 |--------------------------------------------------------------------------
