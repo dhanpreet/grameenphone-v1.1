@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'https://playgpbd.igpl.pro/';
+$config['base_url'] = 'http://game-env.eba-npkjfumf.ap-southeast-1.elasticbeanstalk.com/';
 
 
 /*
