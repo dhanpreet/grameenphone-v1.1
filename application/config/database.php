@@ -84,9 +84,9 @@ $db['default'] = array(
 	 */
 	 
 	//'hostname' => 'gramindb-do-user-7533479-0.b.db.ondigitalocean.com:25060',
-	'hostname' => 'private-gramindb-do-user-7533479-0.b.db.ondigitalocean.com:25060',
-	'username' => 'doadmin',
-	'password' => 'NxpGVCcQv2gs9aGv',
+	'hostname' => 'aa1fd67z57cyvad.cmq6opoqub9h.ap-southeast-1.rds.amazonaws.com',
+	'username' => 'admin',
+	'password' => '8S2XAWYsKkZ3Qma7tJTP',
 	'database' => 'grameenphone_live_db',
 	
 	
