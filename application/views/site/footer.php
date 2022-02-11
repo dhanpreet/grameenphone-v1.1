@@ -36,14 +36,14 @@
 			<?php }else{ ?>
 				<div class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
 			<?php } ?>
-				<a  href="<?php echo site_url() ?>" class="homefooterclick <?php if($this->uri->segment(1)=='' || ($this->uri->segment(1)=='site' && $this->uri->segment(2)=='index')){ echo "theme-color"; }else{ echo "text-white"; } ?>"> 
+				<a  href="<?php echo site_url('home/'.$userToken) ?>" class="homefooterclick <?php if($this->uri->segment(1)=='' || ($this->uri->segment(1)=='site' && $this->uri->segment(2)=='index')){ echo "theme-color"; }else{ echo "text-white"; } ?>"> 
 					<i class="f1h2vptk fa fa-home <?php if($this->uri->segment(1)=='' || ($this->uri->segment(1)=='site' && $this->uri->segment(2)=='index')){ echo "theme-color"; }else{ echo "text-white"; } ?>"></i><span>
 					<br>  Home 
 				</a>
 			</div>
 			
 			<div class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
-				<a  href="<?php echo site_url('Games') ?>" class="gamesfooterclick <?php if($this->uri->segment(1)=='Games'){ echo "theme-color"; }else{ echo "text-white"; } ?>"> 
+				<a  href="<?php echo site_url('Games/?token='.$userToken) ?>" class="gamesfooterclick <?php if($this->uri->segment(1)=='Games'){ echo "theme-color"; }else{ echo "text-white"; } ?>"> 
 					<i class="f1h2vptk fa fa-gamepad <?php if($this->uri->segment(1)=='Games'){ echo "theme-color"; }else{ echo "text-white"; } ?>"></i><span>
 					<br>  Games
 				</a>
@@ -55,7 +55,7 @@
 			<div class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
 			<?php } ?>
 			
-				<a  href="<?php echo site_url('tournamentHistory') ?>#" class="historyfooterclick <?php if($this->uri->segment(1)=='tournamentHistory'){ echo "theme-color"; }else{ echo "text-white"; } ?>">
+				<a  href="<?php echo site_url('tournamentHistory/?token='.$userToken) ?>#" class="historyfooterclick <?php if($this->uri->segment(1)=='tournamentHistory'){ echo "theme-color"; }else{ echo "text-white"; } ?>">
 					<i class="f1h2vptk fa fa-boxes <?php if($this->uri->segment(1)=='tournamentHistory'){ echo "theme-color"; }else{ echo "text-white"; } ?>"></i><span>
 					<br> History
 				</a>

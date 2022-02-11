@@ -6,7 +6,6 @@ function obfuscate_email($email){
 }
 ?>
 
-
 <?php
 // Get Unsubscribe User Access Duration
 $accessUnsubscribe = true;
@@ -23,7 +22,7 @@ $accessUnsubscribe = true;
 		   <div id="sidebarProfile" class="f1wvou2n">
 		  			
 				<div class="f1m7l5pe">
-				<a href="<?php echo site_url('updateProfileImage') ?>">
+				<a href="<?php echo site_url('updateProfileImage/?token='.$userToken) ?>">
 				<?php if(!empty($userInfo['user_image'])){ ?>
 					
 					<?php if($userInfo['user_login_type'] == '1') { ?>
@@ -40,20 +39,20 @@ $accessUnsubscribe = true;
 
 				<div class="f10r1kbh">	
 					<div class="ftumkjx">
-					<a href="<?php echo site_url('ManageProfile') ?>" class="text-white">
+					<a href="<?php echo site_url('ManageProfile/?token='.$userToken) ?>" class="text-white">
 					<?php
 					if(!empty($userInfo['user_full_name'])){
 						//$phone = substr($userInfo['user_phone'],0, 12);
 						$phone = substr($userInfo['user_phone'],0, 13);
-						echo ucwords($userInfo['user_full_name'])."<br>".substr($phone, 0, 3).'xxxxxx'.substr($phone, 10, 3);
+						echo ucwords($userInfo['user_full_name'])."<br>"."+".substr($phone, 0, 3).'xxxxxx'.substr($phone, 10, 3);
+					
+					} else if(!empty($userInfo['user_phone'])){
+						$prefix = "+";
+						$ph = substr($userInfo['user_phone'],0, 13);
+						echo $prefix.substr($ph, 0, 3).'xxxxxx'.substr($ph, 10, 3); 
 					
 					} else if(!empty($userInfo['user_email'])){
 						echo obfuscate_email($userInfo['user_email']);
-					
-					} else if(!empty($userInfo['user_phone'])){
-						$prefix = "+".substr($userInfo['user_phone'],0, 2);
-						$ph = substr($userInfo['user_phone'],2, 10);
-						echo $prefix.substr($ph, 0, 3).'XXXX'.substr($ph, 7, 3); 
 					}
 					?>
 					</a>
@@ -95,11 +94,11 @@ $accessUnsubscribe = true;
 		
 		<div class="side-menu">
 			<ul>
-				<li><a href="<?php echo site_url('updateProfileImage') ?>"><i class="f1h2vptk fa fa-user-circle fa-lg"></i><span>Select Profile Image</span></a></li>
-				<li><a href="<?php echo site_url('ManageProfile') ?>"><i class="f1h2vptk fa fas fa-user-edit fa-lg"></i> <span>Manage Profile</span></a></li>
-					<li><a href="<?php echo site_url('Spin-Win') ?>" id="spinwheel"><i class="f1h2vptk fa fa-spinner fa-lg"></i><span>Spin & Win</span></a></li>
-				<li><a href="<?php echo site_url('tournamentHistory') ?>"><i class="f1h2vptk fa fa-boxes fa-lg"></i><span>Tournament History</span></a></li>
-				<li><a href="<?php echo site_url('Notifications') ?>"><i class="f1h2vptk fa fa-bell fa-lg"></i><span>Notifications <span class="badge bg-danger" style="background:red !important;"><?php if(!empty($this->unreadNotifications) && $this->unreadNotifications>0) { echo @$this->unreadNotifications; }  ?></span></span></a></li>
+				<li><a href="<?php echo site_url('updateProfileImage/?token='.$userToken) ?>"><i class="f1h2vptk fa fa-user-circle fa-lg"></i><span>Select Profile Image</span></a></li>
+				<li><a href="<?php echo site_url('ManageProfile/?token='.$userToken) ?>"><i class="f1h2vptk fa fas fa-user-edit fa-lg"></i> <span>Manage Profile</span></a></li>
+					<li><a href="<?php echo site_url('Spin-Win/?token='.$userToken) ?>" id="spinwheel"><i class="f1h2vptk fa fa-spinner fa-lg"></i><span>Spin & Win</span></a></li>
+				<li><a href="<?php echo site_url('tournamentHistory/?token='.$userToken) ?>"><i class="f1h2vptk fa fa-boxes fa-lg"></i><span>Tournament History</span></a></li>
+				<li><a href="<?php echo site_url('Notifications/?token='.$userToken) ?>"><i class="f1h2vptk fa fa-bell fa-lg"></i><span>Notifications <span class="badge bg-danger" style="background:red !important;"><?php if(!empty($this->unreadNotifications) && $this->unreadNotifications>0) { echo @$this->unreadNotifications; }  ?></span></span></a></li>
 				
 			</ul>
 		

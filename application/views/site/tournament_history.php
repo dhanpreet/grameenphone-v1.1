@@ -247,7 +247,7 @@
 
 	<section>
 		<div class="f1lhk7ql">
-			<a href="<?php echo site_url('') ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a>
+			<a href="<?php echo site_url('home/'.$userToken) ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a>
 			<div class="f1py95a7" style="text-transform: capitalize; color: rgb(255, 255, 255);">Tournament History</div>
 		</div>
 		
@@ -617,7 +617,7 @@ win.scroll(function(event) {
 </script>
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
 
@@ -638,9 +638,10 @@ $(document).ready(function() {
 			current_page = (current_page+1);
 			
 			var dataStr = "offset="+offset;
+			//var userToken = "<?php echo $userToken; ?>";
 			
 			$.ajax({
-				url: "<?php echo site_url('site/getTournamentsMore/') ?>"+offset,
+				url: "<?php echo site_url('site/getTournamentsMore/'.$userToken.'/') ?>"+offset,
 				success: function(response){
 					
 					if(response){

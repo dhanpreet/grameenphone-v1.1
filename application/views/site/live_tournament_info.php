@@ -150,7 +150,7 @@ function obfuscate_email($email){
 		<div class="overlay">&nbsp;</div>	
 			
 		<div class="details-game-strip">
-			<span class="pull-left"><a href="<?php echo site_url('') ?>"><img src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a></span>
+			<span class="pull-left"><a href="<?php echo site_url('home/'.@$userToken) ?>"><img src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a></span>
 			<span class="pull-right how-to-play"><a href="#" data-toggle="modal" data-target="#how_to_play" >How to Play?</a></span>
 		</div>
 		<!-- End Details Strip -->
@@ -176,7 +176,7 @@ function obfuscate_email($email){
 		
 		<div class="col-xs-12 detail-btns">
 			
-			<div class="col-xs-6 practive"><span><a class="practice_tournament" data-href="<?php echo site_url('practiceTournamentGame/'.base64_encode($tournamentInfo['tournament_gameboost_id']).'/'.base64_encode($tournamentInfo['tournament_id'])) ?>"><span class="theme-color">Practice</span></a></span></div>
+			<div class="col-xs-6 practive"><span><a class="practice_tournament" data-href="<?php echo site_url('practiceTournamentGame/'.base64_encode($tournamentInfo['tournament_gameboost_id']).'/'.base64_encode($tournamentInfo['tournament_id']).'/?token='.$userToken) ?>"><span class="theme-color">Practice</span></a></span></div>
 			
 			<div class="col-xs-6 play-tournament"><span><a id="play_tournament"><span class="white">Play Tournament</span></a></span></div>
 			
@@ -225,7 +225,7 @@ function obfuscate_email($email){
 			<div class="col-xs-9 padd">
 				<?php if(!empty($checkPlayerEntry['player_id'])){ ?>
 					<span class="bold theme-color">Your current rank #<?php echo @$myRank; ?></span> 
-					<a  href="<?php echo site_url('LiveTournamentLeaderboard/'.base64_encode($tournamentInfo['tournament_id'])) ?>" class="block white">View Leaderboard <img src="<?php echo base_url() ?>assets/frontend/img/icons/Arrow-Forward.png" width="14"></a>
+					<a  href="<?php echo site_url('LiveTournamentLeaderboard/'.base64_encode($tournamentInfo['tournament_id']).'/?token='.$userToken) ?>" class="block white">View Leaderboard <img src="<?php echo base_url() ?>assets/frontend/img/icons/Arrow-Forward.png" width="14"></a>
 				
 				<?php } else { ?>
 					<span class="bold">You havn't played this tournament!</span> 
@@ -299,7 +299,7 @@ $('#play_tournament').click(function(){
 	var tour_id = "<?php echo $tournamentInfo['tournament_id']; ?>"; 
 	var tour_game_id = "<?php echo $tournamentInfo['tournament_game_id']; ?>"; 
 	
-	var tournamentPlayURL = "<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id'])) ?>"; 
+	var tournamentPlayURL = "<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id']).'/?token='.$userToken) ?>"; 
 	//alert(tour_id);
 	
 	if(tournament_type == '1'){ // for free content
@@ -377,7 +377,7 @@ $('#play_tournament').click(function(){
 				window.webkit.messageHandlers.onContentChange.postMessage({contentUrl:"<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id'])) ?>", isPremium: true});
 			} else {
 				window.jsInterface.eventExecute( "play_paid_tournament_games", "page,tournament-details");
-				window.jsInterface.contentChange("<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id'])) ?>", true);
+				window.jsInterface.contentChange("<?php echo site_url('PlayLiveTournament/'.base64_encode($tournamentInfo['tournament_id']).'/?token='.$userToken) ?>", true);
 			}
 			
 			//window.location.href = tournamentPlayURL;

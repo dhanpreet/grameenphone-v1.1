@@ -41,7 +41,7 @@
         <div class="touraments-profile "> 
         
           <div class="transperent-strip">
-          <span class="pull-left"><a href="<?php echo site_url('LiveTournament/'.base64_encode($tournament_id)) ?>"><img src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a></span>
+          <span class="pull-left"><a href="<?php echo site_url('LiveTournament/'.base64_encode($tournament_id).'/?token='.$userToken) ?>"><img src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a></span>
           
           </div>
         </div>
@@ -54,7 +54,8 @@
             <div class="col-xs-12 padd rank-table">
                 <table class="table">
                   <tr><th colspan="2">User</th><th>Score</th><th>Rank</th></tr>
-                   <?php $logged_user_id = $this->session->userdata('userId'); ?>
+                   <?php //$logged_user_id = $this->session->userdata('userId'); ?>
+                   <?php $logged_user_id = base64_decode($userToken); ?>
 			
 				  <?php
 					if(is_array($playersInfo) && count($playersInfo)>0){

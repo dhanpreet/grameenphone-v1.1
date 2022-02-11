@@ -316,9 +316,6 @@ class Gp extends REST_Controller {
     }
 
 	
-	
-	
-	
 	public function updateUserCallback_get(){		
 		/*$this->db->select("*");
 		$this->db->from("user_login_token_logs");

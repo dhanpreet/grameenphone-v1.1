@@ -26,7 +26,7 @@
 			</picture>
 		</a>
 		<div class="fod5rt6" style="right:10px !important;">		
-		  <a class="fqp01bg theme-color" style="font-size: 0.85em;text-transform: UPPERCASE;" href="<?php echo site_url('Spin-Win'); ?>">
+		  <a class="fqp01bg theme-color" style="font-size: 0.85em;text-transform: UPPERCASE;" href="<?php echo site_url('Spin-Win/?token='.$userToken); ?>">
 			<img src="<?php echo base_url('assets/frontend/img/spinwin.png') ?>"style=" width:22%;" />&nbsp;Spin & Win
 		  </a>
 		</div>

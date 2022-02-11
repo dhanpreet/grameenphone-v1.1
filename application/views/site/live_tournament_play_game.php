@@ -201,9 +201,9 @@
 	
 			<span class="arrow-absolute">
 			
-				<?php $logged_user_id = $this->session->userdata('userId'); ?>
+				<?php //$logged_user_id = $this->session->userdata('userId'); ?>
 				
-				<a href="<?php echo site_url('site/updateLiveTournamentPlayerScore/'.base64_encode($tournament_id).'/'.@$game_id.'/'.@$player_profile_id.'/redirect_tournament') ?>"  style="cursor: pointer;color:#fff !important; margin-top: 5px;">
+				<a href="<?php echo site_url('site/updateLiveTournamentPlayerScore/'.base64_encode($tournament_id).'/'.@$game_id.'/'.@$player_profile_id.'/redirect_tournament'.'/?token='.$userToken) ?>"  style="cursor: pointer;color:#fff !important; margin-top: 5px;">
 					<img src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14">
 				</a>
 				
@@ -245,8 +245,9 @@
 </div>	
 
  <script>
+	/*
       $(document).ready(function() {
-        var dataStr = "tournament_id=<?php echo $tournament_id; ?>"+"&game_id=<?php echo $game_id; ?>"+"&skillpod_player_id=<?php echo $player_profile_id; ?>";
+        var dataStr = "tournament_id=<?php echo $tournament_id; ?>"+"&game_id=<?php echo $game_id; ?>"+"&skillpod_player_id=<?php echo $player_profile_id; ?>"+"&token=<?php echo $userToken; ?>";
         setInterval(function() {
           $.ajax({
             crossDomain: true,
@@ -260,9 +261,9 @@
             failure: function() {},
             complete: function() {}
           });
-        }, 15000);
+        }, 5000);
       });
-
+*/
     </script>
 	
   <script type="text/javascript">

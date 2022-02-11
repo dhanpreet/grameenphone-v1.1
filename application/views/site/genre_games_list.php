@@ -39,7 +39,7 @@
 			<div class="col-xs-12 padd auto-margin games_area"> 
 				<?php if(is_array($gamesList) && count($gamesList)>0){ ?>
 					<?php foreach($gamesList as $row){ ?>
-						<a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($row['id'])) ?>" data-id="<?php echo (@$row['gid']); ?>" >
+						<a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($row['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$row['gid']); ?>" >
 						  <div class="col-xs-4 padd">
 							<div class="thumb-container" data-attr-id="<?php echo base64_encode(@$row['gid']); ?>">
 							  <!-- <img class="img-responsive" src="<?php echo @$row['GameImage']; ?>"> -->

@@ -698,7 +698,6 @@ echo "</pre>";
 		if(!empty($_GET['token'])){
 			$userId = base64_decode($_GET['token']);
 			$data['userToken'] = base64_encode($userId);
-			$userToken = base64_encode($userId);
 		}
 		
 		$tournament_id = base64_decode($id); 
@@ -723,7 +722,7 @@ echo "</pre>";
 			}
 			
 			if($data['userInfo']['user_type'] == '2' && $data['tournamentInfo']['tournament_section']!='1' && $joinedStatus == false){
-				redirect('LiveTournament/'.$id.'/?token='.$userToken);
+				redirect('LiveTournament/'.$id);
 			}
 
 			$userPlayCoins = $data['userInfo']['user_play_coins'];
@@ -1135,7 +1134,7 @@ echo "</pre>";
 	}
 
 
-	public function getTournamentsMore($userToken, $offset){
+	public function getTournamentsMore($offset, $userToken){
 		//$userId = $this->session->userdata('userId');
 		$userId = base64_decode($userToken);
 		
@@ -1978,6 +1977,1003 @@ echo "</pre>";
 // *****************************   **************************** ********************************** //
 
 
+	
+// *****************************   **************************** ********************************** //
+// *****************************   Custom Tournaments Starts Here ********************************** //
+// *****************************   **************************** ********************************** //
+
+
+	public function createTournament()	{
+		$this->load->view('site/create_tournament');
+	}
+
+	public function tournamentStep1()	{
+		$userId = $this->session->userdata('userId');
+		$userInfo = $this->SITEDBAPI->validateUser($userId);
+		$data['gamesList'] = $this->SITEDBAPI->getPublishedPTGames();
+		if(!empty($userInfo['user_id']) && $userInfo['user_subscription']==0)
+		{
+			if($userInfo['user_free_custom_tournaments']>0)
+			$this->load->view('site/tournament_step_1', $data);
+			else
+			{
+				$this->session->set_flashdata('less_custom_tournament' , "Sorry ,You are not a VIP user. So,  you can not create more tournament. ");
+				redirect();
+			}
+		}
+			
+		else if( !empty($userInfo['user_id']) && $userInfo['user_play_coins'] > 100){
+			$this->load->view('site/tournament_step_1', $data);
+		} else {
+			$this->session->set_flashdata("less_play_coins","Sorry, You don't have enough play coins to create a new tournament.");
+			redirect();
+		}
+	}
+
+	public function searchGameByName()	{
+		$txt = $_POST['txt'];
+		$data['gamesList'] = $this->SITEDBAPI->searchPTGameByName($txt);
+		$this->load->view('site/tournament_search_result', $data);
+	}
+
+	public function tournamentStep2($gameId){
+		$gameId =  base64_decode($gameId);
+		$this->session->set_userdata('gameId', $gameId);
+		$data['gameId'] = $gameId;
+		$data['gameInfo'] = $this->SITEDBAPI->getGameInfo($gameId);
+		$this->load->view('site/tournament_step_2', $data);
+	}
+
+	public function saveTournamentTimings(){
+		$start_day =  $_POST['start_day'];
+		$start_date = date('Y-m-d');
+		if($start_day == 'tomorrow'){
+			$start_date = date("Y-m-d", strtotime("+ 1 day"));
+		}
+
+		$this->session->set_userdata('startDay', $_POST['start_day']);
+		$this->session->set_userdata('startDate', $start_date);
+		$this->session->set_userdata('duration', $_POST['duration']);
+		$this->session->set_userdata('exactHour', $_POST['exact_hour']);
+		$this->session->set_userdata('exactMinutes', $_POST['exact_minutes']);
+		$this->session->set_userdata('exactAmpm', $_POST['exact_ampm']);
+		echo 'success';
+	}
+
+	public function tournamentStep3($gameId){
+		$gameId =  base64_decode($gameId);
+		$data['gameId'] = $gameId;
+		$data['start_day'] = $this->session->userdata('startDay');
+		$data['start_date'] = $this->session->userdata('startDate');
+		$data['duration'] = $this->session->userdata('duration');
+		$data['exact_hour'] = $this->session->userdata('exactHour');
+		$data['exact_minutes'] = $this->session->userdata('exactMinutes');
+		$data['exact_ampm'] = $this->session->userdata('exactAmpm');
+		$data['gameInfo'] = $this->SITEDBAPI->getGameInfo($gameId);
+
+		/* Get tournament timings */
+		 	$startDate = $this->session->userdata('startDate');
+
+			$duration = $this->session->userdata('duration');
+			$exactHour = $this->session->userdata('exactHour');
+			$exactMinutes = $this->session->userdata('exactMinutes');
+		 	$exactAmpm = $this->session->userdata('exactAmpm');
+
+			$timings = $this->calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm);
+			$data['t_end_date'] = $timings['end_date'];
+			$data['t_end_time'] = $timings['end_time'];
+
+		/* Get tournament timings ends */
+
+		$this->load->view('site/tournament_step_3', $data);
+	}
+
+	public function saveTournamentDetails(){
+
+		$userId = $this->session->userdata('userId');
+		// $result=$this->SITEDBAPI->getSiteUserDetail($userId);
+
+		$gameId = $this->session->userdata('gameId');
+		$startDay = $this->session->userdata('startDay');
+		$startDate = $this->session->userdata('startDate');
+		$duration = $this->session->userdata('duration');
+		$exactHour = $this->session->userdata('exactHour');
+		$exactMinutes = $this->session->userdata('exactMinutes');
+		$exactAmpm = $this->session->userdata('exactAmpm');
+		$userInfo = $this->SITEDBAPI->validateUser($userId);
+		$playersCount = $_POST['players_count'];
+		$entryFee = $_POST['entry_fee'];
+		$prizeType = $_POST['prize_type'];
+		$this->session->set_userdata('playersCount' ,$playersCount);
+		$this->session->set_userdata('entryFee' ,$entryFee);
+		$this->session->set_userdata('prizeType' ,$prizeType);
+		if($userInfo['user_subscription']!=1)
+			{
+				if($userInfo['user_free_custom_tournaments']>0)
+				{
+					$free_tournament = $userInfo['user_free_custom_tournaments'];
+					$tournament['user_free_custom_tournaments'] = ($free_tournament - 1);
+					$this->db->where('user_id', $userId);
+					$this->db->update('site_users', $tournament);
+				}
+				else{
+					$this->session->set_userdata('user_tournament' , true);
+					$redirectLink = site_url()."UserSubscription";
+					return print_r($redirectLink);
+				}
+			}
+		// Get the game info from master table
+		$gameInfo = $this->SITEDBAPI->getGameInfo($gameId);
+		$gplGameId = $gameInfo['id'];
+		$gplGameName = $gameInfo['Name'];
+		$gplGameImage = $gameInfo['GameImage'];
+		$gplGameCategory = $gameInfo['Category'];
+		$gplGameScreen = $gameInfo['screen'];
+
+		// Calculate the timings of the tournament
+		$timings = $this->calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm);
+
+
+		//Set start time in 24 hour format for tournament start time
+		if($exactAmpm == 'PM' && $exactHour == 12)
+			$exactHour= $exactHour;
+		else if($exactAmpm == 'PM')
+			$exactHour= $exactHour+12;
+
+
+		$save['t_user_id'] = $userId;
+		$save['t_game_gid'] = $gameId;
+		$save['t_game_id'] = $gplGameId;
+		$save['t_game_name'] = $gplGameName;
+		$save['t_game_image'] = $gplGameImage;
+		$save['t_game_category'] = $gplGameCategory;
+		$save['t_game_screen'] = $gplGameScreen;
+		$save['t_start_day'] = $startDay;
+
+		$save['t_duration'] = $duration;
+		$save['t_exact_hour'] = $exactHour;
+		$save['t_exact_minutes'] = $exactMinutes;
+		$save['t_exact_ampm'] = $exactAmpm;
+		$save['t_start_date'] = $startDate;
+		$save['t_start_time'] = $exactHour.":".$exactMinutes;
+		$save['t_end_date'] = $timings['end_date'];
+		$save['t_end_time'] = $timings['end_time'];
+
+		$save['t_players_count'] = $playersCount;
+		$save['t_entry_fee'] = $entryFee;
+		$save['t_prize_type'] = $prizeType;
+
+		$share_code = $this->createShareCode(10);   // 10 specifies string lenth here
+		$share_code = strtoupper($share_code);
+		$sharelink = site_url()."SHARE/".base64_encode($share_code);
+		$save['t_share_code'] = $share_code;
+		$save['t_share_link'] = $sharelink;
+
+		$save['t_added_on'] = time();
+
+		if($this->db->insert('user_tournaments', $save)){
+			$tournamentId = $this->db->insert_id();
+
+			$savePlayer['player_t_id'] = $tournamentId;
+			$savePlayer['player_user_id'] = $userId;
+			$savePlayer['player_score'] = 0;
+			$savePlayer['player_type'] = '1';
+			$savePlayer['player_added_on'] = time();
+			$this->db->insert('user_tournament_players', $savePlayer);
+			
+			
+				// Deduct the 100 Play Coins from user Total coins
+			if($userInfo['user_subscription']==1)
+			{
+				$userInfo = $this->SITEDBAPI->validateUser($userId);
+				$playCoins = $userInfo['user_play_coins'];
+				$updatedPlayCoins = ($playCoins-100);
+				$dataCoins['user_play_coins'] = $updatedPlayCoins;
+				$this->db->where('user_id', $userId);
+				$this->db->update('site_users', $dataCoins);
+				
+				// Update a row for managing coins history				
+				$coinHistory['coin_user_id'] = $userId;
+				$coinHistory['coin_date'] = date('Y-m-d');				
+				$coinHistory['coin_section'] = '4';  //1=AddCoins  2=SpinWin  3=RedeemRewardCoins  4=CreateTournament  5=TournamentReward
+				$coinHistory['coin_play_coins_add'] = '-'.$entryFee;
+				$coinHistory['coin_play_coins_redeem'] = $entryFee;
+				$coinHistory['coin_tournament_id'] = $tournamentId;
+				$coinHistory['coin_type'] = '1';  // 1=PlayCoins  2=RewardCoins  3=Both
+				$coinHistory['coin_added_on'] = time();
+				$this->db->insert('user_coins_history', $coinHistory);
+			}
+				//Save User Notification
+				$this->saveUserNotification($userId, $type='1');
+				
+			$redirectLink = site_url()."Tournaments/".base64_encode($tournamentId);
+
+			echo $redirectLink;
+		} else {
+			echo '0';
+		}
+
+	}
+
+	public function saveTournament(){
+		$userId = $this->session->userdata('userId');
+		$gameId = $this->session->userdata('gameId');
+		$startDay = $this->session->userdata('startDay');
+		$startDate = $this->session->userdata('startDate');
+		$duration = $this->session->userdata('duration');
+		$exactHour = $this->session->userdata('exactHour');
+		$exactMinutes = $this->session->userdata('exactMinutes');
+		$exactAmpm = $this->session->userdata('exactAmpm');
+		$userInfo = $this->SITEDBAPI->validateUser($userId);
+		$playersCount = $this->session->userdata('playersCount');
+		$entryFee = $this->session->userdata('entryFee');
+		$prizeType =$this->session->userdata('prizeType');
+		$this->session->set_userdata('playersCount' ,$playersCount);
+		$this->session->set_userdata('entryFee' ,$entryFee);
+		$this->session->set_userdata('prizeType' ,$prizeType);
+		if($userInfo['user_subscription']!=1)
+			{
+				if($userInfo['user_free_custom_tournaments']>0)
+				{
+					$free_tournament = $userInfo['user_free_custom_tournaments'];
+					$tournament['user_free_custom_tournaments'] = ($free_tournament - 1);
+					$this->db->where('user_id', $userId);
+					$this->db->update('site_users', $tournament);
+				}
+				else{
+					$this->session->set_userdata('user_tournament' , true);
+					$redirectLink = site_url()."UserSubscription";
+					return print_r($redirectLink);
+				}
+			}
+		// Get the game info from master table
+		$gameInfo = $this->SITEDBAPI->getGameInfo($gameId);
+		$gplGameId = $gameInfo['id'];
+		$gplGameName = $gameInfo['Name'];
+		$gplGameImage = $gameInfo['GameImage'];
+		$gplGameCategory = $gameInfo['Category'];
+		$gplGameScreen = $gameInfo['screen'];
+
+		// Calculate the timings of the tournament
+		$timings = $this->calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm);
+
+
+		//Set start time in 24 hour format for tournament start time
+		if($exactAmpm == 'PM' && $exactHour == 12)
+			$exactHour= $exactHour;
+		else if($exactAmpm == 'PM')
+			$exactHour= $exactHour+12;
+
+
+		$save['t_user_id'] = $userId;
+		$save['t_game_gid'] = $gameId;
+		$save['t_game_id'] = $gplGameId;
+		$save['t_game_name'] = $gplGameName;
+		$save['t_game_image'] = $gplGameImage;
+		$save['t_game_category'] = $gplGameCategory;
+		$save['t_game_screen'] = $gplGameScreen;
+		$save['t_start_day'] = $startDay;
+
+		$save['t_duration'] = $duration;
+		$save['t_exact_hour'] = $exactHour;
+		$save['t_exact_minutes'] = $exactMinutes;
+		$save['t_exact_ampm'] = $exactAmpm;
+		$save['t_start_date'] = $startDate;
+		$save['t_start_time'] = $exactHour.":".$exactMinutes;
+		$save['t_end_date'] = $timings['end_date'];
+		$save['t_end_time'] = $timings['end_time'];
+
+		$save['t_players_count'] = $playersCount;
+		$save['t_entry_fee'] = $entryFee;
+		$save['t_prize_type'] = $prizeType;
+
+		$share_code = $this->createShareCode(10);   // 10 specifies string lenth here
+		$share_code = strtoupper($share_code);
+		$sharelink = site_url()."SHARE/".base64_encode($share_code);
+		$save['t_share_code'] = $share_code;
+		$save['t_share_link'] = $sharelink;
+
+		$save['t_added_on'] = time();
+
+		if($this->db->insert('user_tournaments', $save)){
+			$tournamentId = $this->db->insert_id();
+
+			$savePlayer['player_t_id'] = $tournamentId;
+			$savePlayer['player_user_id'] = $userId;
+			$savePlayer['player_score'] = 0;
+			$savePlayer['player_type'] = '1';
+			$savePlayer['player_added_on'] = time();
+			$this->db->insert('user_tournament_players', $savePlayer);
+				
+				//Save User Notification
+				$this->saveUserNotification($userId, $type='1');
+				
+			$redirectLink = site_url()."Tournaments/".base64_encode($tournamentId);
+
+			echo $redirectLink;
+		} else {
+			echo '0';
+		}
+
+	}
+
+
+	function calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm){
+        if(empty($duration)){
+			$duration = '24';
+		}
+			$start = "{$startDate} {$exactHour}:{$exactMinutes} {$exactAmpm}";
+
+			$end_date = date('Y-m-d',strtotime("+{$duration} hours ",strtotime($start)));
+			$end_time = date('H:i',strtotime("+{$duration} hours ",strtotime($start)));
+		    $timings['end_date'] = $end_date;
+		    $timings['end_time'] = $end_time;
+		    return $timings;
+	}
+
+	public function tournamentInfo($id){
+		$id = base64_decode($id);
+
+		// Get tournament info
+		$data['tournamentInfo'] = $this->SITEDBAPI->getTournamentInfo($id);
+		$data['playersInfo'] = $this->SITEDBAPI->getTournamentPlayersListDESC($id);
+
+		$today = time();
+
+		$startDate = $data['tournamentInfo']['t_start_date']." ".$data['tournamentInfo']['t_start_time'].":00";
+		$startDate = strtotime($startDate);
+
+		$endDate = $data['tournamentInfo']['t_end_date']." ".$data['tournamentInfo']['t_end_time'].":00";
+	 	$endDate = strtotime($endDate);
+
+		$status = 0;     //1=CurrentlyWorking   2=Expired   3=futureTournament
+		if($startDate > $today){
+			$status = 3;
+		} else if($endDate < $today){
+			$status = 2;
+		} else if($startDate <= $today && $endDate >= $today){
+			$status = 1;
+		}
+		$data['t_current_status'] = $status;
+		// Compare dates of tournaments for the status  ends
+		if(is_array($data['tournamentInfo']) && count($data['tournamentInfo'])>0){
+			$data['session_page_type']=13;
+		    $data['session_game_id']=$data['tournamentInfo']['t_game_gid'];
+			$data['session_tournament_id']=$data['tournamentInfo']['t_id'];
+			$this->load->view('site/tournament_info', $data);
+		}else{
+			redirect();
+		}
+
+	}
+
+
+// Custom Tournaments created with banner click for users
+
+	public function customTournament($gameId)	{
+		$userId = $this->session->userdata('userId');
+		$userInfo = $this->SITEDBAPI->validateUser($userId);
+		if(!empty($userInfo['user_id']) && $userInfo['user_subscription']==0)
+		{
+			if($userInfo['user_free_custom_tournaments']>0)
+			{
+				$startDay =  'today';
+				$startDate = date('Y-m-d');
+				$duration = '24';
+				$exactHour = date('h');
+				if($exactHour >= 12)
+					$exactHour = 0;
+				$exactHour = $exactHour+1;
+				$exactMinutes = "00";
+				$exactAmpm = date('A');
+	
+				// Save the details in session to go back  7 further
+				$this->session->set_userdata('gameId', $gameId);
+				$this->session->set_userdata('startDay', $startDay);
+				$this->session->set_userdata('startDate', $startDate);
+				$this->session->set_userdata('duration', $duration);
+				$this->session->set_userdata('exactHour', $exactHour);
+				$this->session->set_userdata('exactMinutes', $exactMinutes);
+				$this->session->set_userdata('exactAmpm', $exactAmpm);
+	
+				// Get tournament end time
+				$timings = $this->calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm);
+	
+	
+				$data['gameId'] = $gameId;
+				$data['start_day'] = $startDay;
+				$data['start_date'] = $startDate;	
+				
+				$data['duration'] = $duration;
+				$data['exact_hour'] = $exactHour;
+				$data['exact_minutes'] = $exactMinutes;
+				$data['exact_ampm'] = $exactAmpm;
+				$data['t_end_date'] = $timings['end_date'];
+				$data['t_end_time'] = $timings['end_time'];
+			
+				$data['gameInfo'] = $this->SITEDBAPI->getGameInfo($gameId);
+	             $data['session_page_type']=12;
+				$data['session_game_id']=$data['gameInfo']['gid'];
+				$this->load->view('site/tournament_step_3', $data);	
+			}
+			else
+			{
+				$this->session->set_flashdata('less_custom_tournament' , "Sorry ,You are not a VIP user. So,  you can not create more tournament. ");
+				redirect();
+			}
+		}
+		else if( !empty($userInfo['user_id']) && $userInfo['user_play_coins'] > 100){
+
+			$startDay =  'today';
+			$startDate = date('Y-m-d');
+			$duration = '24';
+			$exactHour = date('h');
+			if($exactHour >= 12)
+				$exactHour = 0;
+			$exactHour = $exactHour+1;
+			$exactMinutes = "00";
+			$exactAmpm = date('A');
+
+			// Save the details in session to go back  7 further
+			$this->session->set_userdata('gameId', $gameId);
+			$this->session->set_userdata('startDay', $startDay);
+			$this->session->set_userdata('startDate', $startDate);
+			$this->session->set_userdata('duration', $duration);
+			$this->session->set_userdata('exactHour', $exactHour);
+			$this->session->set_userdata('exactMinutes', $exactMinutes);
+			$this->session->set_userdata('exactAmpm', $exactAmpm);
+
+			// Get tournament end time
+			$timings = $this->calculateTournamentTimings($startDate, $duration, $exactHour, $exactMinutes, $exactAmpm);
+
+
+			$data['gameId'] = $gameId;
+			$data['start_day'] = $startDay;
+			$data['start_date'] = $startDate;	
+			
+			$data['duration'] = $duration;
+			$data['exact_hour'] = $exactHour;
+			$data['exact_minutes'] = $exactMinutes;
+			$data['exact_ampm'] = $exactAmpm;
+			$data['t_end_date'] = $timings['end_date'];
+			$data['t_end_time'] = $timings['end_time'];
+		
+			$data['gameInfo'] = $this->SITEDBAPI->getGameInfo($gameId);
+            $data['session_page_type']=12;
+			$data['session_game_id']=$data['gameInfo']['gid'];
+			$this->load->view('site/tournament_step_3', $data);
+		} else {
+			$this->session->set_flashdata("redemption_error","Sorry, You don't have enough play coins to create a new tournament.");
+			redirect();
+		}
+
+	}
+
+
+
+	public function sharedTournamentInfo($share_code){
+		if(!empty($share_code)){
+			$share_code = base64_decode($share_code);
+			$data['tournamentInfo'] = $this->SITEDBAPI->getSharedTournamentInfo($share_code);
+			if(is_array($data['tournamentInfo']) && count($data['tournamentInfo'])>0){
+				$this->session->set_userdata('tournament_share_code', $share_code);
+				$this->load->view('site/share_login');
+			} else {
+				redirect();
+			}
+		} else {
+			redirect();
+		}
+	}
+	
+// *******************   Custom Tournaments ends  *********************************  //
+
+
+
+	public function sendEmailOTP(){
+		$email = $_POST['email'];
+		if(!empty($email)){
+
+			// Sanitize E-mail Address
+			$email =filter_var($email, FILTER_SANITIZE_EMAIL);
+			// Validate E-mail Address
+			$email= filter_var($email, FILTER_VALIDATE_EMAIL);
+			if($email){
+
+					$otp = $this->createOTP(6);
+
+					$row['content']='';
+					$row['content'] .= "<p> <br> <b>{$otp}</b> is the One Time Password (OTP) to login and play your Private Tournament. Do not share the OTP with anyone. </p>";
+					$row['content'] .= "<p><br><br> <b>IMPORTANT</b>: Please do not reply to this message or mail address.</p>";
+					$row['content'] .= "<p><b>DISCLAIMER</b>: This communication is confidential and privileged and is directed to and for the use of the addressee only. The recipient if not the addressee should not use this message if erroneously received, and access and use of this e-mail in any manner by anyone other than the addressee is unauthorized.</p>";
+			
+					$row['subject'] = "Your GSL Login OTP";
+					
+				// Enable this when shift to live server
+					
+					$this->load->library("PhpMailerLib");
+					$mail = $this->phpmailerlib->load();
+					
+					try {
+						//Server settings
+						$mail->SMTPDebug = 0;                                 // Enable verbose debug output
+						$mail->isSMTP();                                      // Set mailer to use SMTP
+						$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+						$mail->SMTPAuth = true;                               // Enable SMTP authentication
+					//	$mail->Username = 'gpl.gamenow@gmail.com';                 // SMTP username
+					//	$mail->Password = 'gpl@123*';                           // SMTP password
+						$mail->Username = 'adxdigitalsg@gmail.com';                 // SMTP username
+						$mail->Password = 'adxd@123';                           // SMTP password
+						$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+						$mail->Port = 465;                                    // TCP port to connect to
+						//Recipients
+						$mail->setFrom('adxdigitalsg@gmail.com', 'GSL');
+						$mail->addAddress($email);     // Add a recipient
+						$mail->addReplyTo('adxdigitalsg@gmail.com', 'GSL');
+						$mail->addBCC('vaish.nisha55@gmail.com');
+
+						//Content
+						$mail->isHTML(true);                                  // Set email format to HTML
+						$mail->Subject = $row['subject'];
+						$mail->Body    = $row['content'];
+					
+						$mail->send();
+						$this->session->set_flashdata('success','<strong>Success! </strong> OTP request sent on the specified email address.');
+
+						$this->session->set_userdata('person_email', $email);
+						$this->session->set_userdata('person_otp', $otp);
+						redirect('verifyOTP/'.$otp);
+						
+					} catch (Exception $e) {
+						$this->session->set_flashdata('error','<strong>Error! </strong> Unable to send OTP request to your specified email address. Please try again.');
+						$shareCode = $this->session->userdata('tournament_share_code');
+						$shareCode = base64_encode($shareCode);
+						redirect("SHARE/".$shareCode);
+					}
+					
+			}	else {
+				redirect();
+			}
+		} else {
+			redirect();
+		}
+	}
+	
+	
+	public function resendEmailOTP($email =''){
+		$email = base64_decode($email);
+		if(!empty($email)){
+
+			// Sanitize E-mail Address
+			$email =filter_var($email, FILTER_SANITIZE_EMAIL);
+			// Validate E-mail Address
+			$email= filter_var($email, FILTER_VALIDATE_EMAIL);
+			if($email){
+
+					$otp = $this->createOTP(6);
+
+				
+					$row['content']='';
+					$row['content'] .= "<p> <br> <b>{$otp}</b> is the One Time Password (OTP) to login and play your Private Tournament. Do not share the OTP with anyone. </p>";
+					$row['content'] .= "<p><br><br> <b>IMPORTANT</b>: Please do not reply to this message or mail address.</p>";
+					$row['content'] .= "<p><b>DISCLAIMER</b>: This communication is confidential and privileged and is directed to and for the use of the addressee only. The recipient if not the addressee should not use this message if erroneously received, and access and use of this e-mail in any manner by anyone other than the addressee is unauthorized.</p>";
+					
+					$row['subject'] = "Your GSL Login OTP";
+					
+					
+					
+				// Enable this when shift to live server
+					
+					$this->load->library("PhpMailerLib");
+					$mail = $this->phpmailerlib->load();
+					
+					try {
+						//Server settings
+						$mail->SMTPDebug = 0;                                 // Enable verbose debug output
+						$mail->isSMTP();                                      // Set mailer to use SMTP
+						$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+						$mail->SMTPAuth = true;                               // Enable SMTP authentication
+						
+						$mail->Username = 'adxdigitalsg@gmail.com';                 // SMTP username
+						$mail->Password = 'adxd@123';                           // SMTP password
+						$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+						$mail->Port = 465;                                    // TCP port to connect to
+						//Recipients
+						$mail->setFrom('adxdigitalsg@gmail.com', 'GSL');
+						$mail->addAddress($email);     // Add a recipient
+						$mail->addReplyTo('adxdigitalsg@gmail.com', 'GSL');
+						$mail->addBCC('vaish.nisha55@gmail.com');
+
+						//Content
+						$mail->isHTML(true);                                  // Set email format to HTML
+						$mail->Subject = $row['subject'];
+						$mail->Body    = $row['content'];
+					
+						$mail->send();
+						$this->session->set_flashdata('success','<strong>Success! </strong> OTP request sent on the specified email address.');
+
+						$this->session->set_userdata('person_email', $email);
+						$this->session->set_userdata('person_otp', $otp);
+						redirect('verifyOTP');
+						
+					} catch (Exception $e) {
+						$this->session->set_flashdata('error','<strong>Error! </strong> Unable to send OTP request to your specified email address. Please try again.');
+						$shareCode = $this->session->userdata('tournament_share_code');
+						$shareCode = base64_encode($shareCode);
+						redirect("SHARE/".$shareCode);
+					}
+					
+			}	else {
+				redirect();
+			}
+		} else {
+			redirect();
+		}
+	}
+	
+	
+	public function verifyOTP(){
+		$shareCode = $this->session->userdata('tournament_share_code');
+		$personEmail = $this->session->userdata('person_email');
+		$personOTP = $this->session->userdata('person_otp');
+		$this->load->view('site/verify_login_otp');
+	}
+
+	public function confirmEmailOTP(){
+		$shareCode = $this->session->userdata('tournament_share_code');
+		$personEmail = $this->session->userdata('person_email');
+		$personOTP = $this->session->userdata('person_otp');
+		$otp = $_POST['otp'];
+
+		if(!empty($otp) && $otp == $personOTP){
+
+			$checkEmail = $this->SITEDBAPI->checkUserByEmail($personEmail);
+			if(is_array($checkEmail) && count($checkEmail)>0){
+				// already registered email address
+				$userId = $checkEmail['user_id'];
+				$this->session->set_userdata('userId', $userId);
+
+				if(empty($checkEmail['skillpod_player_id'])){
+					// Create  Skillpod id on gameboost for playing the games
+					$this->createGameboostId($userId, $personEmail);
+				}
+				
+				$this->session->unset_userdata('person_email');
+				$this->session->unset_userdata('person_otp');
+
+
+				// user verified successflly now resend the user to the tournament page
+				redirect('TournamentInfo/'.base64_encode($shareCode));
+
+			} else {
+				$profileImage = rand(1,32);
+				if(!empty($profileImage)){
+					$profileImage = $profileImage.".png";
+				} else {
+					$profileImage = 'default-user.png';
+				}
+				// a non registered email address
+				$dataUser['user_email'] = $personEmail;
+				$dataUser['user_login_otp'] = $personOTP;
+				//$dataUser['user_image'] = 'default-user.png';
+				$dataUser['user_image'] = $profileImage;
+				$dataUser['user_registered_on'] = date('Y-m-d H:i:s');
+				if($this->db->insert('site_users', $dataUser)){
+
+					$userId = $this->db->insert_id();
+					$this->session->set_userdata('userId', $userId);
+
+					$this->session->unset_userdata('person_email');
+					$this->session->unset_userdata('person_otp');
+					
+					// Create  Skillpod id on gameboost for playing the games
+					$this->createGameboostId($userId, $personEmail);
+					
+					// user verified successflly now resend the user to the tournament page
+					redirect('TournamentInfo/'.base64_encode($shareCode));
+
+				} else{
+					$this->session->set_flashdata('error','<strong>Error! </strong> Unable to verify your email address. Please try again after sometime.');
+					redirect('verifyOTP');
+				}
+
+			}
+		} else {
+			$this->session->set_flashdata('error','<strong>Error! </strong> Invalid OTP entered. Please enter a valid OTP sent on your email address.');
+			redirect('verifyOTP');
+		}
+	}
+
+	public function friendTournamentInfo($shareCode){
+		$shareCode = base64_decode($shareCode); 
+		$userId = $this->session->userdata('userId');
+		if(!empty($shareCode) && !empty($userId) ){
+		
+			// Get tournament info
+			$data['tournamentInfo'] = $this->SITEDBAPI->getSharedTournamentInfo($shareCode);
+			
+			
+			if(is_array($data['tournamentInfo']) && count($data['tournamentInfo'])>0){
+				
+				$t_id = $data['tournamentInfo']['t_id'];
+				$data['playersInfo'] = $this->SITEDBAPI->getTournamentPlayersListDESC($t_id);
+
+				// $today = date('Y-m-d H:i:s');
+					$today = time();
+
+					$startDate = $data['tournamentInfo']['t_start_date']." ".$data['tournamentInfo']['t_start_time'].":00";
+					$startDate = strtotime($startDate);
+
+					$endDate = $data['tournamentInfo']['t_end_date']." ".$data['tournamentInfo']['t_end_time'].":00";
+					$endDate = strtotime($endDate);
+
+					$status = 0;     //1=CurrentlyWorking   2=Expired   3=futureTournament
+					if($startDate > $today){
+						$status = 3;
+					} else if($endDate < $today){
+						$status = 2;
+					} else if($startDate <= $today && $endDate >= $today){
+						$status = 1;
+					}
+				$data['t_current_status'] = $status;
+				// Compare dates of tournaments for the status  ends
+				
+				
+				$total_players_count = $data['tournamentInfo']['t_players_count']+1;
+				$joined_players_count = $data['tournamentInfo']['no_players'];
+				if($joined_players_count < $total_players_count) {				
+					$data['player_availability'] = 'yes';
+				} else {
+					$data['player_availability'] = 'no';
+				}
+
+				if($data['t_current_status'] == 2){
+					$this->load->view('site/tournament_expired', $data);
+				} else {
+					$this->load->view('site/friend_tournament_info', $data);
+				}
+			
+			} else{
+				redirect();
+			}		
+		} else {
+			redirect();
+		}
+
+	}
+
+
+	public function joinTournament($id){
+		 $id = base64_decode($id); 
+		//get loggedin  user id
+		$userId = $this->session->userdata('userId');
+		if(!empty($userId) && !empty($id) ){
+		
+			// Get tournament info
+			$data['tournamentInfo'] = $this->SITEDBAPI->getTournamentInfo($id);
+			
+			if(is_array($data['tournamentInfo']) && count($data['tournamentInfo'])>0){
+			//echo $this->db->last_query(); die;
+				
+				$checkTournamentPlayer = $this->SITEDBAPI->checkTournamentPlayer($userId, $id);
+				
+				if(count($checkTournamentPlayer)==0  ){				
+					$savePlayer['player_t_id'] = $id;
+					$savePlayer['player_user_id'] = $userId;
+					$savePlayer['player_score'] = 0;
+					$savePlayer['player_type'] = '2';
+					$savePlayer['player_added_on'] = time();
+					$this->db->insert('user_tournament_players', $savePlayer);
+				}
+				$today = time();
+
+				$startDate = $data['tournamentInfo']['t_start_date']." ".$data['tournamentInfo']['t_start_time'].":00";
+				$startDate = strtotime($startDate);
+
+				$endDate = $data['tournamentInfo']['t_end_date']." ".$data['tournamentInfo']['t_end_time'].":00";
+				$endDate = strtotime($endDate);
+
+				$status = 0;     //1=CurrentlyWorking   2=Expired   3=futureTournament
+				if($startDate > $today){
+					$status = 3;
+				} else if($endDate < $today){
+					$status = 2;
+				} else if($startDate <= $today && $endDate >= $today){
+					$status = 1;
+				}
+				$data['t_current_status'] = $status;
+				$data['user_id'] = $userId;
+				$data['tournament_id'] = $id;
+				$data['playersInfo'] = $this->SITEDBAPI->getTournamentPlayersListDESC($id);
+			redirect('PlayTournament/'.base64_encode($id));
+			
+			} else {
+				redirect();
+			}
+		} else {
+			redirect();
+		}
+	}
+
+
+	public function playTournament($id){
+		$id = base64_decode($id);
+		$userId = $this->session->userdata('userId');
+		if(!empty($userId) && !empty($id) ){
+			// Get tournament info
+			
+			$data['tournamentInfo'] = $this->SITEDBAPI->getTournamentInfo($id);
+			
+			$data['userInfo'] = $this->SITEDBAPI->getSiteUserDetail($userId);
+			if(is_array($data['tournamentInfo']) && count($data['tournamentInfo'])>0){
+				
+				$today = time();
+
+				$startDate = $data['tournamentInfo']['t_start_date']." ".$data['tournamentInfo']['t_start_time'].":00";
+				$startDate = strtotime($startDate);
+
+				$endDate = $data['tournamentInfo']['t_end_date']." ".$data['tournamentInfo']['t_end_time'].":00";
+				$endDate = strtotime($endDate);
+
+				$status = 0;     //1=CurrentlyWorking   2=Expired   3=futureTournament
+				if($startDate > $today){
+					$status = 3;
+				} else if($endDate < $today){
+					$status = 2;
+				} else if($startDate <= $today && $endDate >= $today){
+					$status = 1;
+				}
+				
+				if($status == 1){
+					$gameId = $data['tournamentInfo']['t_game_id'];
+					$playerProfileId = $data['userInfo']['skillpod_player_id'];
+					
+					$data['game_id'] = $gameId;
+					$data['player_profile_id'] = $playerProfileId;
+					$data['tournament_id'] = $id;
+					
+					$this->load->view('site/tournament_play_game', $data);
+				} else {
+					redirect('TournamentInfo/'.base64_encode($data['tournamentInfo']['t_share_code']));
+				}
+			} else {
+				redirect();
+			}
+		} else {
+			redirect();
+		}
+
+	}
+
+	
+	
+	public function updateTournamentPlayerScore($tournament_id='', $game_id='', $skillpod_player_id='', $redirect=''){
+		
+		if(!empty($tournament_id) && !empty($game_id) && !empty($skillpod_player_id) && !empty($redirect)){
+			
+			$userId = $this->session->userdata('userId');
+			$tournament_id =  base64_decode($tournament_id);
+			$game_id = $game_id;
+			$skillpod_player_id =  $skillpod_player_id;
+			$redirect_path =  $redirect;
+			
+			$tournamentInfo = $this->SITEDBAPI->getTournamentInfo($tournament_id);
+			
+			$postArray = array('game_id' => $game_id,'player_id' => $skillpod_player_id);
+			
+			// Get current user score starts
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => 'https://games.igpl.pro/xml-api/get_player_scores',
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => '',
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 0,
+			  CURLOPT_SSL_VERIFYHOST => 0,
+			  CURLOPT_SSL_VERIFYPEER => 0,
+			  CURLOPT_FOLLOWLOCATION => true,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => 'POST',
+			  CURLOPT_POSTFIELDS => $postArray,
+			  CURLOPT_HTTPHEADER => array(
+				'Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwYXJ0bmVyX2NvZGUiOiJ0ZXN0LTAwMSIsInBhcnRuZXJfcGFzc3dvcmQiOiJ0ZXN0LTAwMSJ9.GQp4_XWFc1FkHHGoy6XWVe40_QHCUt4ityt57ahXoEMW2AhNHo27V_wJmypgZshbw1w6345mKffaGtf9XowGOA'
+			  ),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+			
+
+			$responseXML = simplexml_load_string($response);
+			$responseJSON = json_encode($responseXML);
+
+			// Convert into associative array
+			$responseArray = json_decode($responseJSON, true);
+			
+		 	$currentScore = @$responseArray['get_player_scores']['player_scores']['player_score_0']['score'];
+			
+			
+			//Get User last saved score
+			$scoreInfo = $this->SITEDBAPI->getTournamentPlayerScore($tournament_id, $userId);
+			$lastScore = @$scoreInfo['player_score'];
+			$player_id = @$scoreInfo['player_id'];
+			if($currentScore >= $lastScore){
+				$saveScore['player_score'] = $currentScore;
+				$this->db->where('player_id', $player_id);
+				$this->db->update('user_tournament_players', $saveScore);
+			}
+			
+			
+			if($redirect_path == 'redirect_leaderboard'){
+				redirect('TournamentLeaderboard/'.base64_encode($tournament_id));
+			} else {
+				$logged_user_id = $this->session->userdata('userId'); 
+				if($tournamentInfo['t_user_id'] == $logged_user_id){
+					redirect('Tournaments/'.base64_encode($tournamentInfo['t_id']));
+				} else {
+					redirect('TournamentInfo/'.base64_encode($tournamentInfo['t_share_code']));
+				}
+			}
+			
+		} else {
+			redirect();
+		}
+	}
+
+
+	public function updateGameboostPlayerScore(){
+		
+		$userId = $this->session->userdata('userId');
+		$tournament_id = @$_POST['tournament_id'];
+		$game_id = @$_POST['game_id'];
+		$skillpod_player_id = @$_POST['skillpod_player_id'];
+		
+		if(!empty($tournament_id) && !empty($game_id) && !empty($skillpod_player_id)){
+			
+			$tournamentInfo = $this->SITEDBAPI->getTournamentInfo($tournament_id);
+		
+			$apiURL = "https://multiplayergameserver.com/xmlapi7/xmlapi.php?site_id=834&password=GiK2Xz9Ty&nocompress=true&action=get_player_scores&order_by_field=time&order_by_direction=DESC&game_id=".$game_id."&skillpod_player_id=".$skillpod_player_id."&show_games=false";
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $apiURL);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: text/xml'));
+			$response = curl_exec($ch);
+			curl_close($ch);
+
+			$responseXML = simplexml_load_string($response);
+			$responseJSON = json_encode($responseXML);
+
+			// Convert into associative array
+			$responseArray = json_decode($responseJSON, true);
+			$userScore = @$responseArray['player_scores']['player_score_0']['score'];			
+		 	$scoreDate = @$responseArray['player_scores']['player_score_0']['time'];
+			$scoreDate = date('Y-m-d', strtotime($scoreDate));
+		
+			$t_start_date = $tournamentInfo['t_start_date'];
+			$t_end_date = $tournamentInfo['t_end_date'];
+		
+			$currentScore = $userScore;
+			
+			$scoreInfo = $this->SITEDBAPI->getTournamentPlayerScore($tournament_id, $userId);
+			$lastScore = @$scoreInfo['player_score'];
+			$player_id = @$scoreInfo['player_id'];
+			if($currentScore >= $lastScore){
+				$saveScore['player_score'] = $currentScore;
+				$this->db->where('player_id', $player_id);
+				$this->db->update('user_tournament_players', $saveScore);
+			}
+		}
+	}
+
+	
+	
 	public function captureTimeToLeave(){
 		$userId = $this->session->userdata('userId');
 		$paymayaProfileId = $this->session->userdata('paymayaProfileId');
@@ -2073,8 +3069,10 @@ echo "</pre>";
 		$this->db->insert('event_capture', $data);
 	}
 	
-
-
+	
+// *****************************   **************************** ********************************** //
+// *****************************   Custom Tournaments Ends Here ********************************** //
+// *****************************   **************************** ********************************** //
 
 	public function liveTournamentsResults(){
 		

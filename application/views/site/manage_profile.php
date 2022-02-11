@@ -220,13 +220,13 @@
 <div id="load"></div>
 	<section>
 		<div class="f1lhk7ql">
-		<a href="<?php echo site_url() ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png"></a>
+		<a href="<?php echo site_url('home/'.$userToken) ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png"></a>
 		
 		<div class="f1py95a7" style="text-transform: capitalize; color: rgb(255, 255, 255);"><?php echo @$genreName ?> Manage Profile </div>
 		
 		</div>
 	
-	<form action="<?php echo site_url('site/updateUserProfile') ?>" method="post" autocomplete="none">
+	<form action="<?php echo site_url('site/updateUserProfile/?token='.$userToken) ?>" method="post" autocomplete="none">
 						
       <div class="container">
         <div class="row">   <br><br><br><br>		</div>
@@ -236,7 +236,7 @@
 				<div class="row text-box-position2 white-bg">
 				
 				
-						<a href="<?php echo site_url('updateProfileImage') ?>">
+						<a href="<?php echo site_url('updateProfileImage/?token='.$userToken) ?>">
 						<?php if(!empty($userInfo['user_image'])){ ?>
 					
 							<?php if($userInfo['user_login_type'] == '1') { ?>
@@ -314,7 +314,7 @@
         <div class="modal-header bg-success">
 			<h4 class="modal-header">Verify Email Address</h4>
         </div>
-		<form action="<?php echo site_url('site/processEmailVerification') ?>" method="post">
+		<form action="<?php echo site_url('site/processEmailVerification/?token='.$userToken) ?>" method="post">
         <div class="modal-body">
        
 			

@@ -42,7 +42,7 @@
 </head>
 <body>
 	<section>
-		<div class="f1lhk7ql" style="padding-left:10px;"><a href="<?php echo site_url() ?>" style=""><img class="" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a><div class="f1py95a7" style="text-transform: capitalize; color: rgb(255, 255, 255);"> Spin & Win </div></div>
+		<div class="f1lhk7ql" style="padding-left:10px;"><a href="<?php echo site_url('home/'.$userToken) ?>" style=""><img class="" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a><div class="f1py95a7" style="text-transform: capitalize; color: rgb(255, 255, 255);"> Spin & Win </div></div>
 		
   
 		<div class="wheelContainer module" >
@@ -73,7 +73,7 @@
 		</svg>
 		<div class="toast">  <p/>  </div>
 		<div class="btnDiv">
-			<a href="<?php echo site_url() ?>" id="skipLink"> <button id="skipBtn" class="btn"> Skip </button> </a>
+			<a href="<?php echo site_url('home/'.$userToken) ?>" id="skipLink"> <button id="skipBtn" class="btn"> Skip </button> </a>
 			<!-- &nbsp;&nbsp;&nbsp;&nbsp;
 			<button class="btn"> Claim Reward </button>  -->
 		</div>
@@ -127,14 +127,14 @@ function myResult(e) {
 	// document.getElementById('skipBtn').innerText= 'Claim '+claimStr+" Coins!";
 	
 	$.ajax({
-		url: "<?php echo site_url('site/processSpinWinAjax/') ?>"+e.id,
+		url: "<?php echo site_url('site/processSpinWinAjax/'.$userToken.'/') ?>"+e.id,
 		type: "POST",
 		success: function(data){
 			console.log(data)
 		}
 	});
 	//$("#skipLink").attr("href", "<?php echo site_url('site/processSpinWin/') ?>"+e.id);
-	$("#skipLink").attr("href", "<?php echo site_url('') ?>");
+	$("#skipLink").attr("href", "<?php echo site_url('home/'.$userToken) ?>");
 	document.getElementById('skipBtn').innerText= "Claim Prize";
   } else {
 	document.getElementById('skipBtn').innerText= 'Close';

@@ -111,7 +111,7 @@
 		<div id="hero-tournaments-slider" class="col-12 slider hero-tournaments-slider ">
 			<?php $count = 0; ?>	
 			<?php foreach ($vipTournaments as $heroRow){ ?>			
-				<a aria-hidden="false" class="vipclick" href="<?php echo site_url('LiveTournament/' . base64_encode($heroRow['tournament_id'])) ?>">
+				<a aria-hidden="false" class="vipclick" href="<?php echo site_url('LiveTournament/'.base64_encode($heroRow['tournament_id']).'/?token='.$userToken) ?>">
 					<?php if ($heroRow['uploaded'] == 1){ ?>
 					  <img class="lazy" src="<?php echo base_url('uploads/tournaments-banners/' . $heroRow['banner_image_path']) ?>" /> 
 					<?php } else { ?>
@@ -161,7 +161,7 @@
 		<div id="day-tournaments-slider" class="col-12 slider hero-tournaments-slider">
 		<?php $count = 0; ?>
 		<?php foreach ($payAndPlayTournaments as $dayRow){ ?>			
-			<a aria-hidden="false" class="Payplayclick" href="<?php echo site_url('LiveTournament/' . base64_encode($dayRow['tournament_id'])) ?>">
+			<a aria-hidden="false" class="Payplayclick" href="<?php echo site_url('LiveTournament/'.base64_encode($dayRow['tournament_id']).'/?token='.$userToken) ?>">
 				<img  class="lazy" src="<?php echo base_url('uploads/640X360/' . $dayRow['tournament_gameboost_id'] . '.jpg') ?>" /> 
 				<div class="row">
 					<div class="col-xs-5">
@@ -205,7 +205,7 @@
 		
 			<?php $count = 0; ?>	
 			<?php foreach ($freeTournaments as $heroRow){ ?>		
-				<a aria-hidden="false" class="freeclick" href="<?php echo site_url('LiveTournament/' . base64_encode($heroRow['tournament_id'])) ?>">
+				<a aria-hidden="false" class="freeclick" href="<?php echo site_url('LiveTournament/' . base64_encode($heroRow['tournament_id']).'/?token='.$userToken) ?>">
 					<img  class="lazy" style="border-radius:0 !important; border-top-left-radius:10px !important; border-top-right-radius:10px !important; " src="<?php echo base_url('uploads/640X360/' . $heroRow['tournament_gameboost_id'] . '.jpg') ?>" /> 
 					
 					<div class="row">
@@ -262,7 +262,7 @@
 			<div class="glider-2">
 				<div>
 					<?php foreach ($arcadeGames as $rowArcade){ ?>
-						<a class="freegames2 free-games-click" data-href="<?php echo site_url('playGame/' . base64_encode($rowArcade['id'])); ?>" data-id="<?php echo @$rowArcade['gid']; ?>">
+						<a class="freegames2 free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowArcade['id']).'/?token='.$userToken); ?>" data-id="<?php echo @$rowArcade['gid']; ?>">
 						<div class="row thumbnails">
 							<div class="col-xs-3"><img class="lazy thumb-img" src="<?php echo base_url('uploads/games/' . $rowArcade['ImageName']); ?>" ></div>
 							<div class="col-xs-7 text-white text-left"><h3><?php echo $rowArcade['Name']; ?></h3><span class="head-desc">Arcade</span></div>

@@ -101,7 +101,7 @@
 		
 <script>
 jQuery(document).ready(function() {
-    jQuery('#load').fadeOut("slow");
+    jQuery('#load').fadeOut("fast");
 });
 </script>
  
@@ -187,7 +187,7 @@ jQuery(document).ready(function() {
 		var imgId = $('.thumb-container-active').attr('data-attr-id');
 		//alert(imgId)
 		if(imgId !='' && typeof imgId !== 'undefined'){
-			window.location.href = "<?php echo site_url('site/setProfileImage/') ?>"+imgId;
+			window.location.href = "<?php echo site_url('site/setProfileImage/'.$userToken.'/') ?>"+imgId;
 		}
 	});
 

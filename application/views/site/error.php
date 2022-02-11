@@ -11,14 +11,15 @@
 	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
 	<style>
 		:root {
-		  font-size: 20px;
+		  font-size: 15px;
 		  font-family: 'Ubuntu', sans-serif;  
 		  line-height: 1.5;
 		  color: rgba(255, 255, 255, 0.25);
 		}
 
 		body {
-		  height: 100vh;
+			max-width:98vw;
+		  height: 80vh;
 		  display: -webkit-box;
 		  display: flex;
 		  -webkit-box-orient: vertical;
@@ -66,7 +67,7 @@
 		}
 		#error::before {
 		  content: "";
-		  width: 0.75rem;
+		 /* width: 0.75rem; */
 		  height: 50vh;
 		  margin-bottom: 0.75em;
 		  position: absolute;
@@ -84,7 +85,7 @@
 
 		.error-num, .error-num__clip, .error-num__clip::before, .error-num__clip-left {
 		  position: relative;
-		  font-size: 10rem;
+		  font-size: 5rem;
 		  font-family: 'Ubuntu', sans-serif;  
 		  letter-spacing: -0.01em;
 		  color: white;
@@ -136,7 +137,7 @@
 		  }
 		}
 		.error-num__clip::before, .error-num__clip-left::before {
-		  content: "404";
+		  content: "iGPL";
 		  left: 0.05em;
 		  color: white;
 		  z-index: 9;
@@ -151,9 +152,9 @@
 
 <body>
 
-<div id="error"> Page Not Found!</div>
-<div class="error-num">404
-  <div class="error-num__clip">404</div>
+<div id="error"> Please go back <br> and try again! </div>
+<div class="error-num">iGPL
+  <div class="error-num__clip">iGPL</div>
 </div>
 <p id="desc">Uh oh, there seems to be a problem.</p>
 

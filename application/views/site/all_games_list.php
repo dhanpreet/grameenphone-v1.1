@@ -38,13 +38,13 @@
 		
 			<div class="col-xs-12 padd gaming-section-header-strip">
 				<h4><span class="pull-left text-white">&nbsp; Arcade Games</span></h4>
-				<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Arcade') ?>">View all </a></span>
+				<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Arcade/?token='.$userToken) ?>">View all </a></span>
 			</div>
 		
 			<div class="col-xs-12 padd auto-margin games_area"> 
 				<?php if(is_array($arcadegamesList) && count($arcadegamesList)>0){ ?>
 					<?php foreach($arcadegamesList as $row){ ?>
-						<a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($row['id'])) ?>" data-id="<?php echo (@$row['gid']); ?>" >
+						<a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($row['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$row['gid']); ?>" >
 						  <div class="col-xs-4 padd">
 							<div class="thumb-container" data-attr-id="<?php echo base64_encode(@$row['gid']); ?>">
 							  <img class="img-responsive lazy" data-src="<?php echo base_url('uploads/games/'.$row['ImageName']); ?>"  src="<?php echo base_url() ?>assets/frontend/img/placeholder.gif">
@@ -58,13 +58,13 @@
 			
 		<div class="col-xs-12 padd gaming-section-header-strip">
 			<br><h4><span class="pull-left text-white">&nbsp; Action Games</span></h4>
-			<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Action') ?>">View all </a></span>
+			<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Action/?token='.$userToken) ?>">View all </a></span>
 		</div>
 		
 		<div class="col-xs-12 padd auto-margin games_area"> 
         <?php if(is_array($actiongamesList) && count($actiongamesList)>0){ ?>
           <?php foreach($actiongamesList as $rowAction){ ?>
-            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowAction['id'])) ?>" data-id="<?php echo (@$rowAction['gid']); ?>" >
+            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowAction['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$rowAction['gid']); ?>" >
               <div class="col-xs-4 padd">
               <div class="thumb-container" data-attr-id="<?php echo base64_encode(@$rowAction['gid']); ?>">
                  <img class="img-responsive lazy" data-src="<?php echo base_url('uploads/games/'.$rowAction['ImageName']); ?>"  src="<?php echo base_url() ?>assets/frontend/img/placeholder.gif">
@@ -79,13 +79,13 @@
 	  
 	<div class="col-xs-12 padd gaming-section-header-strip">
 		<br><h4><span class="pull-left text-white">&nbsp; Adventure Games</span></h4>
-		<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Adventure') ?>">View all </a></span>
+		<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Adventure/?token='.$userToken) ?>">View all </a></span>
 	</div>
 		
       <div class="col-xs-12 padd auto-margin games_area"> 
         <?php if(is_array($adventuregamesList) && count($adventuregamesList)>0){ ?>
           <?php foreach($adventuregamesList as $rowAdventure){ ?>
-            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowAdventure['id'])) ?>" data-id="<?php echo (@$rowAdventure['gid']); ?>" >
+            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowAdventure['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$rowAdventure['gid']); ?>" >
               <div class="col-xs-4 padd">
               <div class="thumb-container" data-attr-id="<?php echo base64_encode(@$rowAdventure['gid']); ?>">
                  <img class="img-responsive lazy" data-src="<?php echo base_url('uploads/games/'.$rowAdventure['ImageName']); ?>"  src="<?php echo base_url() ?>assets/frontend/img/placeholder.gif">
@@ -100,13 +100,13 @@
 	  
 	  <div class="col-xs-12 padd gaming-section-header-strip">
 			<br><h4><span class="pull-left text-white">&nbsp; Puzzle & logic Games</span></h4>
-			<span class="pull-right theme-color"><a class="theme-color" href="<?php echo site_url('Games/Puzzle') ?>">View all </a></span>
+			<span class="pull-right theme-color"><a class="theme-color" href="<?php echo site_url('Games/Puzzle/?token='.$userToken) ?>">View all </a></span>
 		</div>
 		
        <div class="col-xs-12 padd auto-margin games_area"> 
         <?php if(is_array($puzzlegamesList) && count($puzzlegamesList)>0){ ?>
           <?php foreach($puzzlegamesList as $rowPuzzle){ ?>
-            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowPuzzle['id'])) ?>" data-id="<?php echo (@$rowPuzzle['gid']); ?>" >
+            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowPuzzle['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$rowPuzzle['gid']); ?>" >
               <div class="col-xs-4 padd">
               <div class="thumb-container" data-attr-id="<?php echo base64_encode(@$rowPuzzle['gid']); ?>">
                  <img class="img-responsive lazy" data-src="<?php echo base_url('uploads/games/'.$rowPuzzle['ImageName']); ?>"  src="<?php echo base_url() ?>assets/frontend/img/placeholder.gif">
@@ -120,13 +120,13 @@
 	  
 		<div class="col-xs-12 padd gaming-section-header-strip">
 			<br><h4><span class="pull-left text-white">&nbsp; Sports & Racing Games</span></h4>
-			<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Sports') ?>">View all </a></span>
+			<span class="pull-right theme-color"><a  class="theme-color" href="<?php echo site_url('Games/Sports/?token='.$userToken) ?>">View all </a></span>
 		</div>
 	
        <div class="col-xs-12 padd auto-margin games_area"> 
         <?php if(is_array($sportsgamesList) && count($sportsgamesList)>0){ ?>
           <?php foreach($sportsgamesList as $rowSports){ ?>
-            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowSports['id'])) ?>" data-id="<?php echo (@$rowSports['gid']); ?>" >
+            <a class="free-games-click" data-href="<?php echo site_url('playGame/'.base64_encode($rowSports['id']).'/?token='.$userToken) ?>" data-id="<?php echo (@$rowSports['gid']); ?>" >
               <div class="col-xs-4 padd">
               <div class="thumb-container" data-attr-id="<?php echo base64_encode(@$rowSports['gid']); ?>">
                 <img class="img-responsive lazy" data-src="<?php echo base_url('uploads/games/'.$rowSports['ImageName']); ?>"  src="<?php echo base_url() ?>assets/frontend/img/placeholder.gif">

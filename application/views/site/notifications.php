@@ -73,7 +73,7 @@
 <div id="load"></div>
 	<section>
 		<div class="f1lhk7ql">
-			<a href="<?php echo site_url('') ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a>
+			<a href="<?php echo site_url('home/'.$userToken) ?>"><img class="f1iowekn" src="<?php echo base_url() ?>assets/frontend/img/icons/back.png" height="14"></a>
 			<div class="f1py95a7" style="text-transform: capitalize; color: rgb(255, 255, 255);">Notifications</div>
 		</div>
 		
@@ -90,7 +90,7 @@
 			
 			<div class="row" style="margin-bottom: 30px">
 				<div class="col-xs-12 padd auto-margin games_area text-right"> 
-			<a href="<?php echo site_url('site/clearNotifications') ?>" class="text-white text-bold">CLEAR ALL</a> &nbsp;
+			<a href="<?php echo site_url('site/clearNotifications/?token='.$userToken) ?>" class="text-white text-bold">CLEAR ALL</a> &nbsp;
 				</div>
 			</div>
 			
@@ -128,7 +128,7 @@
 										<p class="text-bold"> <?php echo $tRow['notify_title']; ?></p>
 									</div>
 									<div class="col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
-										<a href="<?php echo site_url('site/deleteNotification/'.base64_encode($tRow['notify_id'])) ?>" class="delete"><i class="fa fa-times"></i></a>
+										<a href="<?php echo site_url('site/deleteNotification/'.base64_encode($tRow['notify_id']).'/?token='.$userToken) ?>" class="delete"><i class="fa fa-times"></i></a>
 									</div>
 								</div>
 								
